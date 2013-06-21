@@ -584,12 +584,52 @@ static PyObject *py_slp_parse_srvurl(PyObject *self, PyObject *args)
 
 static PyObject *py_slp_escape(PyObject *self, PyObject *args)
 {
-	return NULL;
+	char *unescaped;
+	char *escaped;
+	PyObject *ret;
+	PyObject *py_istag;
+	SLPBoolean istag;
+	SLPError err;
+	
+	if (!PyArg_ParseTuple(args, "si", &unescaped, &py_istag))
+		return NULL;
+	
+	istag = PyObject_IsTrue(py_istag);
+
+	if((err = SLPEscape(unescaped, &escaped, istag)) != SLP_OK) {
+		PyErr_SetString(PyExc_RuntimeError, get_slp_error_msg(err));
+		return NULL;
+	}
+
+	ret = Py_BuildValue("z", escaped);
+	SLPFree(escaped);
+
+	return ret;
 }
 
 static PyObject *py_slp_unescape(PyObject *self, PyObject *args)
 {
-	return NULL;
+	char *unescaped;
+	char *escaped;
+	PyObject *ret;
+	PyObject *py_istag;
+	SLPBoolean istag;
+	SLPError err;
+	
+	if (!PyArg_ParseTuple(args, "si", &escaped, &py_istag))
+		return NULL;
+	
+	istag = PyObject_IsTrue(py_istag);
+
+	if((err = SLPUnescape(escaped, &unescaped, istag)) != SLP_OK) {
+		PyErr_SetString(PyExc_RuntimeError, get_slp_error_msg(err));
+		return NULL;
+	}
+
+	ret = Py_BuildValue("z", unescaped);
+	SLPFree(unescaped);
+
+	return ret;
 }
 
 static PyMethodDef slp_methods[] = {
@@ -614,7 +654,7 @@ static PyMethodDef slp_methods[] = {
 	{ "SLPParseSrvURL", py_slp_parse_srvurl, METH_VARARGS, NULL },
 	{ "SLPEscape", py_slp_escape, METH_VARARGS, NULL },
 	{ "SLPUnescape", py_slp_unescape, METH_VARARGS, NULL },
-	/* SLPFree() is missing for obvious reasons. */
+	/* SLPFree() not implemented. */
 	{ NULL, NULL, 0, NULL }
 };
 

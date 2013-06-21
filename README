@@ -1,0 +1,11 @@
+PySLP: Python bindings for the OpenSLP API
+
+SLP (Service Location Protocol) is a framework for the discovery and selection
+of network services. The procol has been defined in the IETF RFC 2608. The API
+implemented by OpenSLP is defined for the C programming language  by RFC 2614.
+
+PySLP provides set of functions similar to those specified in the RFC 2614. Due
+to the Python nature there are some divergences from the RFC definitions. Most
+notably the functions never return an error code but raise a runtime exception
+on SLP API call failures.  The SLPFree() function is not implemented in the
+Python API at all for obvious reasons.
