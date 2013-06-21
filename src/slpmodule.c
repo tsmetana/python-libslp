@@ -296,8 +296,8 @@ static PyObject *py_slp_open(PyObject *self, PyObject *args)
 		return NULL;
 	if ((err = SLPOpen(lang, isasync, &hslp)) != SLP_OK) {
 		PyErr_SetString(PyExc_RuntimeError, get_slp_error_msg(err));
-        return NULL;
-    }
+		return NULL;
+	}
 	if (!(py_handle = PyCapsule_New(hslp, NULL, NULL))) {
 		SLPClose(hslp);
 		return NULL;
@@ -341,13 +341,13 @@ static PyObject *py_slp_findsrvs(PyObject *self, PyObject *args)
 		return NULL;
 
 	if ((err = SLPFindSrvs(hslp, srvtype, scopetype, filter, srv_url_cb,
-			(void *)cookie)) != SLP_OK) {
+					(void *)cookie)) != SLP_OK) {
 		PyErr_SetString(PyExc_RuntimeError, get_slp_error_msg(err));
-        return NULL;
+		return NULL;
 	}
-	
+
 	Py_INCREF(Py_None);
-	
+
 	return Py_None;
 }
 
@@ -371,11 +371,11 @@ static PyObject *py_slp_findsrvtypes(PyObject *self, PyObject *args)
 		return NULL;
 
 	if ((err = SLPFindSrvTypes(hslp, namingauth, scopelist, srv_attr_type_cb,
-			(void *)cookie)) != SLP_OK) {
+					(void *)cookie)) != SLP_OK) {
 		PyErr_SetString(PyExc_RuntimeError, get_slp_error_msg(err));
-        return NULL;
+		return NULL;
 	}
-	
+
 	Py_INCREF(Py_None);
 	
 	return Py_None;
@@ -395,11 +395,11 @@ static PyObject *py_slp_findattrs(PyObject *self, PyObject *args)
 		return NULL;
 
 	if ((err = SLPFindAttrs(hslp, srvurl, scopelist, attrids, srv_attr_type_cb,
-			(void *)cookie)) != SLP_OK) {
+					(void *)cookie)) != SLP_OK) {
 		PyErr_SetString(PyExc_RuntimeError, get_slp_error_msg(err));
-        return NULL;
+		return NULL;
 	}
-	
+
 	Py_INCREF(Py_None);
 	
 	return Py_None;
@@ -429,11 +429,11 @@ static PyObject *py_slp_reg(PyObject *self, PyObject *args)
 	fresh = PyObject_IsTrue(py_fresh);
 
 	if ((err = SLPReg(hslp, srvurl, lifetime, srvtype, attrs, fresh, reg_report_cb,
-			(void *)cookie)) != SLP_OK) {
+					(void *)cookie)) != SLP_OK) {
 		PyErr_SetString(PyExc_RuntimeError, get_slp_error_msg(err));
-        return NULL;
+		return NULL;
 	}
-	
+
 	Py_INCREF(Py_None);
 	
 	return Py_None;
@@ -459,11 +459,11 @@ static PyObject *py_slp_dereg(PyObject *self, PyObject *args)
 	if ((err = SLPDereg(hslp, srvurl, reg_report_cb, (void *)cookie))
 			!= SLP_OK) {
 		PyErr_SetString(PyExc_RuntimeError, get_slp_error_msg(err));
-        return NULL;
+		return NULL;
 	}
-	
+
 	Py_INCREF(Py_None);
-	
+
 	return Py_None;
 }
 
@@ -488,7 +488,7 @@ static PyObject *py_slp_delattrs(PyObject *self, PyObject *args)
 	if ((err = SLPDelAttrs(hslp, srvurl, attrs, reg_report_cb, (void *)cookie))
 			!= SLP_OK) {
 		PyErr_SetString(PyExc_RuntimeError, get_slp_error_msg(err));
-        return NULL;
+		return NULL;
 	}
 	
 	Py_INCREF(Py_None);
@@ -520,7 +520,7 @@ static PyObject *py_slp_find_scopes(PyObject *self, PyObject *args)
 
 	if ((err = SLPFindScopes(hslp, &scopelist)) != SLP_OK) {
 		PyErr_SetString(PyExc_RuntimeError, get_slp_error_msg(err));
-        return NULL;
+		return NULL;
 	}
 	
 	/* There should be always at least the "DEFAULT" scope. */
@@ -544,15 +544,15 @@ static PyObject *py_slp_set_property(PyObject *self, PyObject *args)
 {
 	char *name;
 	char *value;
-	
+
 	if (!PyArg_ParseTuple(args, "zz", &name, &value))
 		return NULL;
-	
+
 	/* According to the OpenSLP documentation, this does nothing. */
 	SLPSetProperty(name, value);
 
 	Py_INCREF(Py_None);
-	
+
 	return Py_None;
 }
 
