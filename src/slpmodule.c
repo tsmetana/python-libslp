@@ -639,14 +639,27 @@ static PyObject *py_slp_find_scopes(PyObject *self, PyObject *args)
 	return ret;
 }
 
+/**
+ * Interface function for SLPGetProperty().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject wrapping the arguments:
+ * 				name: The name of a net.slp property to get.
+ * @return	The string with the property value. May be None.
+ */
 static PyObject *py_slp_get_property(PyObject *self, PyObject *args)
 {
 	char *name;
+	const char *val;
 
 	if (!PyArg_ParseTuple(args, "s", &name))
 		return NULL;
-
-	return Py_BuildValue("z", SLPGetProperty(name));
+	if ((val = SLPGetProperty(name))) {
+		return Py_BuildValue("s", val);
+	} else {
+		Py_INCREF(Py_None);
+		return Py_None;
+	}
 }
 
 static PyObject *py_slp_set_property(PyObject *self, PyObject *args)
