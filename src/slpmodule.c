@@ -277,7 +277,7 @@ static int location_func_prep(PyObject *args, SLPHandle *hslp,
  * Interface function for SLPOpen().
  *
  * @param self	Unused. Mandated by the Python C API.
- * @param args	Wrapping the SLPOepn arguments:
+ * @param args	Wrapping the SLPOpen arguments:
  * 				lang: String according to RFC 1766, may be None or "".
  * 				isasync: Boolean indicating whether to open for async
  * 				operations.
@@ -306,6 +306,13 @@ static PyObject *py_slp_open(PyObject *self, PyObject *args)
 	return Py_BuildValue("O", py_handle);
 }
 
+/**
+ * Interface function for SLPClose().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject capsule storing the SLPHandle pointer.
+ * @return	None.
+ */
 static PyObject *py_slp_close(PyObject *self, PyObject *args)
 {
 	PyObject *py_handle;
@@ -327,6 +334,21 @@ static PyObject *py_slp_close(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+/**
+ * Interface function for SLPFindSrvs().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject wrapping the arguments:
+ * 				hslp: SLPHandle returned from SLPOpen
+ *				srvtype: The service type string -- may be None or ""
+ *				scopelist: Comma separated list of scope names -- may be ""
+ *				filter: A query formulated of attribute pattern matching
+ *				expressions in the form of an LDAPv3 search filter.
+ *				callback: te python object representing the callback function to
+ *				be called.
+ *				cookie: arbitrary data to be passed to the callback.
+ * @return	None on success, NULL + exception raised on error.
+ */
 static PyObject *py_slp_findsrvs(PyObject *self, PyObject *args)
 {
 	SLPHandle hslp;
@@ -351,6 +373,20 @@ static PyObject *py_slp_findsrvs(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+/**
+ * Interface function for SLPFindSrvTypes().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject wrapping the arguments:
+ * 				hslp: SLPHandle returned from SLPOpen
+ *				namingauth: The naming authorities to search. "*" for all
+ *				authorities, "" for the default (IANA)
+ *				scopelist: Comma separated list of scope names -- may be ""
+ *				callback: te python object representing the callback function to
+ *				be called.
+ *				cookie: arbitrary data to be passed to the callback.
+ * @return	None on success, NULL + exception raised on error.
+ */
 static PyObject *py_slp_findsrvtypes(PyObject *self, PyObject *args)
 {
 	SLPHandle hslp;
@@ -381,6 +417,21 @@ static PyObject *py_slp_findsrvtypes(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+/**
+ * Interface function for SLPFindAttrs().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject wrapping the arguments:
+ * 				hslp: SLPHandle returned from SLPOpen
+ *				srvurl: The service URL of the service to the attributes of.
+ *				scopelist: Comma separated list of scope names -- may be ""
+ *				attrids: A comma separated list of attribute ids to return.
+ *				"" for all attributes.
+ *				callback: te python object representing the callback function to
+ *				be called.
+ *				cookie: arbitrary data to be passed to the callback.
+ * @return	None on success, NULL + exception raised on error.
+ */
 static PyObject *py_slp_findattrs(PyObject *self, PyObject *args)
 {
 	SLPHandle hslp;
@@ -405,6 +456,24 @@ static PyObject *py_slp_findattrs(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+/**
+ * Interface function for SLPReg().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject wrapping the arguments:
+ * 				hslp: SLPHandle returned from SLPOpen
+ * 				lifetime: An unsigned short giving the lifetime of the service
+ * 				in seconds.
+ *				srvtype: Ignored, mandated by the RFC 2614, see OpenSLP
+ *				documentation for the details.
+ *				attrs: Attributes of the registered service. Ex. "(Attr1=val1)"
+ *				fresh: True if the registration is new, False for
+ *				re-registration
+ *				callback: te python object representing the callback function to
+ *				be called.
+ *				cookie: arbitrary data to be passed to the callback.
+ * @return	None on success, NULL + exception raised on error.
+ */
 static PyObject *py_slp_reg(PyObject *self, PyObject *args)
 {
 	SLPHandle hslp;
@@ -439,6 +508,18 @@ static PyObject *py_slp_reg(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+/**
+ * Interface function for SLPDereg().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject wrapping the arguments:
+ * 				hslp: SLPHandle returned from SLPOpen
+ *				srvurl: The service URL of the service to be deregistered.
+ *				callback: te python object representing the callback function to
+ *				be called.
+ *				cookie: arbitrary data to be passed to the callback.
+ * @return	None on success, NULL + exception raised on error.
+ */
 static PyObject *py_slp_dereg(PyObject *self, PyObject *args)
 {
 	SLPHandle hslp;
@@ -467,6 +548,19 @@ static PyObject *py_slp_dereg(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+/**
+ * Interface function for SLPDelAttrs().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject wrapping the arguments:
+ * 				hslp: SLPHandle returned from SLPOpen
+ *				srvurl: The service URL of the service to be deregistered.
+ *				attrs: Comma separated list of the attributes to be deleted.
+ *				callback: te python object representing the callback function to
+ *				be called.
+ *				cookie: arbitrary data to be passed to the callback.
+ * @return	None on success, NULL + exception raised on error.
+ */
 static PyObject *py_slp_delattrs(PyObject *self, PyObject *args)
 {
 	SLPHandle hslp;
@@ -496,12 +590,27 @@ static PyObject *py_slp_delattrs(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
-
+/**
+ * Interface function for SLPGetRefreshInterval().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	Unused.
+ * @return	A positive integer value that is the smallest value that should be
+ *			passed as a lifetime to SLPReg().
+ */
 static PyObject *py_slp_get_refresh_interval(PyObject *self, PyObject *args)
 {
 	return Py_BuildValue("i", SLPGetRefreshInterval());
 }
 
+/**
+ * Interface function for SLPFindScopes().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject wrapping the arguments:
+ * 				hslp: SLPHandle returned from SLPOpen
+ * @return	Comma separated list of the available scopes.
+ */
 static PyObject *py_slp_find_scopes(PyObject *self, PyObject *args)
 {
 	SLPHandle hslp;
@@ -524,7 +633,7 @@ static PyObject *py_slp_find_scopes(PyObject *self, PyObject *args)
 	}
 	
 	/* There should be always at least the "DEFAULT" scope. */
-	ret = Py_BuildValue("is", err, scopelist);
+	ret = Py_BuildValue("s", scopelist);
 	SLPFree(scopelist);
 
 	return ret;
