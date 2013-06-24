@@ -662,6 +662,18 @@ static PyObject *py_slp_get_property(PyObject *self, PyObject *args)
 	}
 }
 
+/**
+ * Interface function for SLPSetProperty().
+ *
+ * Please note: this function does nothing. Consult the OpenSLP documentation
+ * for more details why.
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject wrapping the arguments:
+ * 				name: The name of a net.slp property to set.
+ * 				value: The new value.
+ * @return	The string with the property value. May be None.
+ */
 static PyObject *py_slp_set_property(PyObject *self, PyObject *args)
 {
 	char *name;
@@ -670,7 +682,7 @@ static PyObject *py_slp_set_property(PyObject *self, PyObject *args)
 	if (!PyArg_ParseTuple(args, "zz", &name, &value))
 		return NULL;
 
-	/* According to the OpenSLP documentation, this does nothing. */
+	/* No-op */
 	SLPSetProperty(name, value);
 
 	Py_INCREF(Py_None);
@@ -678,6 +690,14 @@ static PyObject *py_slp_set_property(PyObject *self, PyObject *args)
 	return Py_None;
 }
 
+/**
+ * Interface function for SLPParseSrvURL().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject wrapping the arguments:
+ * 				srvurl: The URL string to be parsed.
+ * @return	The tuple consisting of the SLPSrvURL structure members.
+ */
 static PyObject *py_slp_parse_srvurl(PyObject *self, PyObject *args)
 {
 	char *srvurl;
@@ -704,6 +724,15 @@ static PyObject *py_slp_parse_srvurl(PyObject *self, PyObject *args)
 	return ret;
 }
 
+/**
+ * Interface function for SLPEscape().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject wrapping the arguments:
+ * 				unescaped: The string to be escaped.
+ * 				istag: Check for bad characters.
+ * @return	The escaped string.
+ */
 static PyObject *py_slp_escape(PyObject *self, PyObject *args)
 {
 	char *unescaped;
@@ -729,6 +758,15 @@ static PyObject *py_slp_escape(PyObject *self, PyObject *args)
 	return ret;
 }
 
+/**
+ * Interface function for SLPUnescape().
+ *
+ * @param self	Unused. Mandated by the Python C API.
+ * @param args	PyObject wrapping the arguments:
+ * 				escaped: The string to be un-escaped.
+ * 				istag: Check for bad characters.
+ * @return	The un-escaped string.
+ */
 static PyObject *py_slp_unescape(PyObject *self, PyObject *args)
 {
 	char *unescaped;
@@ -754,6 +792,7 @@ static PyObject *py_slp_unescape(PyObject *self, PyObject *args)
 	return ret;
 }
 
+/* The methods table. TODO: Add the Python description strings. */
 static PyMethodDef slp_methods[] = {
 	/* handle functions */
 	{ "SLPOpen", py_slp_open, METH_VARARGS, NULL },
