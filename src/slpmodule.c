@@ -819,8 +819,20 @@ static PyMethodDef slp_methods[] = {
 	{ NULL, NULL, 0, NULL }
 };
 
+# define ADD_INT_VAR(__m, __n, __v) \
+    do { \
+        PyObject *__o = PyInt_FromLong((long)(__v)); \
+        PyObject_SetAttrString(__m, __n, __o); \
+        Py_DECREF(__o); \
+    } while (0)
+
 PyMODINIT_FUNC initslp(void)
 {
-	(void) Py_InitModule("slp", slp_methods);
+    PyObject *m;
+	
+    m = Py_InitModule("slp", slp_methods);
+    /* Now add some named variables */
+    ADD_INT_VAR(m, "SLP_LIFETIME_MAXIMUM", SLP_LIFETIME_MAXIMUM);
+    ADD_INT_VAR(m, "SLP_LIFETIME_DEFAULT", SLP_LIFETIME_DEFAULT);
 }
 
