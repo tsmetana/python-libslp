@@ -110,7 +110,11 @@ static inline SLPBoolean cb_common(PyObject *py_args, void *cookie, int cleanup)
 
 	py_result = PyObject_CallObject(cb_data->py_callback, py_args);
 	Py_DECREF(py_args);
-	if (cleanup || !(ret = PyObject_IsTrue(py_result))) {
+	if (!py_result) {
+		PyErr_SetString(PyExc_RuntimeError,
+				"The SLP callback did not return a boolean value.");
+		ret = 0;
+	} else if (cleanup || !(ret = PyObject_IsTrue(py_result))) {
 		Py_DECREF(cb_data->py_callback);
 		free(cookie);
 	}
