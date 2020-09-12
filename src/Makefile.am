@@ -6,12 +6,12 @@ AM_CFLAGS =\
 	-fPIC \
 	$(Python_CFLAGS)
 
-noinst_PROGRAMS = slpmodule.so
+noinst_PROGRAMS = slp.so
 
-slpmodule_so_LDFLAGS = -shared -Wl,-Bdynamic \
-						-Wl,-soname=slpmodule.so
+slp_so_LDFLAGS = -shared -Wl,-Bdynamic \
+						-Wl,-soname=slp.so
 
-slpmodule_so_SOURCES = \
+slp_so_SOURCES = \
 	slpmodule.c
 
-slpmodule_so_LDADD = $(Python_LIBS) $(Slp_LIBS)
+slp_so_LDADD = $(Python_LIBS) $(Slp_LIBS)

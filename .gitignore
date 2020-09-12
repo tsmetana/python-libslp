@@ -6,6 +6,7 @@ config.h*
 config.status
 config.log
 configure
+compile
 depcomp
 install-sh
 missing

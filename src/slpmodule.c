@@ -25,6 +25,10 @@
 #include <slp.h>
 #include <Python.h>
 
+#if PY_MAJOR_VERSION >= 3
+#define PyInt_FromLong		PyLong_FromLong
+#endif
+
 struct _cb_cookie_s {
 	PyObject *py_handle;
 	PyObject *py_cookie;
@@ -830,11 +834,29 @@ static PyMethodDef slp_methods[] = {
 		Py_DECREF(__o); \
 	} while (0)
 
+#if PY_MAJOR_VERSION >= 3
+static struct PyModuleDef slpmodule = {
+	PyModuleDef_HEAD_INIT,
+	"slp",
+	NULL,
+	-1,
+	slp_methods
+};
+#endif
+
+#if PY_MAJOR_VERSION >= 3
+PyMODINIT_FUNC PyInit_slp(void)
+{
+	PyObject *m;
+
+	m = PyModule_Create(&slpmodule);
+#else
 PyMODINIT_FUNC initslp(void)
 {
 	PyObject *m;
 
 	m = Py_InitModule("slp", slp_methods);
+#endif
 	/* Now add some named variables */
 	ADD_INT_VAR(m, "SLP_LIFETIME_MAXIMUM", SLP_LIFETIME_MAXIMUM);
 	ADD_INT_VAR(m, "SLP_LIFETIME_DEFAULT", SLP_LIFETIME_DEFAULT);
@@ -858,5 +880,7 @@ PyMODINIT_FUNC initslp(void)
 	ADD_INT_VAR(m, "SLP_HANDLE_IN_USE", SLP_HANDLE_IN_USE);
 	ADD_INT_VAR(m, "SLP_TYPE_ERROR", SLP_TYPE_ERROR);
 	ADD_INT_VAR(m, "SLP_LAST_CALL", SLP_LAST_CALL);
+
+	return m;
 }
 
